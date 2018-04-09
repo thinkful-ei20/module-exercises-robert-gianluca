@@ -30,26 +30,31 @@ const shoppingList = (function(){
 
 
 	function generateShoppingItemsString(shoppingList) {
-		const items = shoppingList.map((item) => generateItemElement(item));
+		console.log(shoppingList);
+		const items = shoppingList.
+			filter(item => store.hideCheckedItems !== true || item.checked !== true).
+			filter(item => store.searchTerm.length === 0 || item.name.indexOf(store.searchTerm) > -1).
+			map((item) => generateItemElement(item));
 		return items.join('');
 	}
 
 
 	function render() {
 		// Filter item list if store prop is true by item.checked === false
-		let items = store.items;
-		if (store.hideCheckedItems) {
-			items = store.items.filter(item => !item.checked);
-		}
 
-		// Filter item list if store prop `searchTerm` is not empty
-		if (store.searchTerm) {
-			items = store.items.filter(item => item.name.includes(store.searchTerm));
-		}
+		// let items = store.items;
+		// if (store.hideCheckedItems) {
+		// 	items = store.items.filter(item => !item.checked);
+		// }
+
+		// // Filter item list if store prop `searchTerm` is not empty
+		// if (store.searchTerm) {
+		// 	items = store.items.filter(item => item.name.includes(store.searchTerm));
+		// }
 
 		// render the shopping list in the DOM
 		console.log('`render` ran');
-		const shoppingListItemsString = generateShoppingItemsString(items);
+		const shoppingListItemsString = generateShoppingItemsString(store.items);
 
 		// insert that HTML into the DOM
 		$('.js-shopping-list').html(shoppingListItemsString);
@@ -91,15 +96,6 @@ const shoppingList = (function(){
 		});
 	}
 
-	function toggleCheckedItemsFilter() {
-		store.hideCheckedItems = !store.hideCheckedItems;
-	}
-
-	function setSearchTerm(val) {
-		store.searchTerm = val;
-	}
-
-
 	function handleDeleteItemClicked() {
 		$('.js-shopping-list').on('click', '.js-item-delete', event => {
 			const id = getItemIdFromElement(event.currentTarget);
@@ -120,7 +116,7 @@ const shoppingList = (function(){
 
 	function handleToggleFilterClick() {
 		$('.js-filter-checked').click(() => {
-			toggleCheckedItemsFilter();
+			store.toggleCheckedFilter();
 			render();
 		});
 	}
@@ -128,7 +124,7 @@ const shoppingList = (function(){
 	function handleShoppingListSearch() {
 		$('.js-shopping-list-search-entry').on('keyup', event => {
 			const val = $(event.currentTarget).val();
-			setSearchTerm(val);
+			store.setSearchTerm(val);
 			render();
 		});
 	}

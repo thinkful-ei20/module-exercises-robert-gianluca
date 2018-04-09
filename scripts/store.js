@@ -3,10 +3,10 @@
 
 const store = (function() {
 	const items = [
-		// { id: cuid(), name: 'apples', checked: false },
-		// { id: cuid(), name: 'oranges', checked: false },
-		// { id: cuid(), name: 'milk', checked: true },
-		// { id: cuid(), name: 'bread', checked: false }
+		{ id: cuid(), name: 'apples', checked: false },
+		{ id: cuid(), name: 'oranges', checked: false },
+		{ id: cuid(), name: 'milk', checked: true },
+		{ id: cuid(), name: 'bread', checked: false }
 	];
 
 	const hideCheckedItems = false;
@@ -50,15 +50,25 @@ const store = (function() {
 		this.items.splice(index, 1);
 	};
 
+	const toggleCheckedFilter = function() {
+		this.hideCheckedItems = !this.hideCheckedItems;
+	};
+
+	const setSearchTerm = function(term) {
+		this.searchTerm = term;
+	};
+
 	return {
 		items,
+		searchTerm,
 		addItem,
 		findAndToggleChecked,
 		findAndUpdateName,
 		findById,
 		findAndDelete,
 		hideCheckedItems,
-		searchTerm,
+		setSearchTerm,
+		toggleCheckedFilter,
 	};
 
 }());
